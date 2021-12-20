@@ -54,39 +54,42 @@ namespace StackMarkup
         }
 
         public bool CanContainContent { get; } 
-        public object BuildedElement { get; private set; }
 
         public object BuildElement(MarkupParsedRow row)
         {
             var element  = Activator.CreateInstance(_elementType);
-            var properties = new DbConnectionStringBuilder(); 
+            var properties = new DbConnectionStringBuilder();
 
-            if(!string.IsNullOrWhiteSpace(row.PropertiesString))
+            if (!_configuration.CustomPropertyParser)
             {
-                try
-                {
-                    properties.ConnectionString = row.PropertiesString;
-                }
-                catch (ArgumentException)
-                {
-                    throw new SyntaxException("Некорректный синтаксис свойств");
-                }
-            }
 
-            foreach(var propertyName in properties.Keys)
-            {
-                var propName = (string)propertyName;
-                if(_properties.ContainsKey(propName))
+                if (!string.IsNullOrWhiteSpace(row.PropertiesString))
                 {
-                    var value = GetConvertedTypeFromString(
-                        _properties[propName].PropertyType,
-                        (string)properties[propName]
-                    );
-                    _properties[propName].SetValue(element, value);
+                    try
+                    {
+                        properties.ConnectionString = row.PropertiesString;
+                    }
+                    catch (ArgumentException)
+                    {
+                        throw new SyntaxException("Некорректный синтаксис свойств");
+                    }
                 }
-                else
+
+                foreach (var propertyName in properties.Keys)
                 {
-                    throw new InvalidCastException($"Не найдено свойство {propName}");
+                    var propName = ((string)propertyName).Trim().ToLower();
+                    if (_properties.ContainsKey(propName))
+                    {
+                        var value = GetConvertedTypeFromString(
+                            _properties[propName].PropertyType,
+                            (string)properties[propName]
+                        );
+                        _properties[propName].SetValue(element, value);
+                    }
+                    else
+                    {
+                        throw new InvalidCastException($"Не найдено свойство {propName}");
+                    }
                 }
             }
 
@@ -117,7 +120,7 @@ namespace StackMarkup
         private static object GetConvertedTypeFromString(Type type, string value)
         {
             var converter = TypeDescriptor.GetConverter(type);
-            return converter.ConvertToInvariantString(value);
+            return converter.ConvertFromInvariantString(value);
         }
     }
 }

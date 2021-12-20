@@ -9,7 +9,13 @@ namespace StackMarkup
         public readonly IReadOnlyList<string> aliases;
         public MarkupAliasesAttribute(params string[] aliases)
         {
-            this.aliases = new List<string>(aliases).AsReadOnly();
+            var list = new List<string>();
+            foreach(var alias in aliases)
+            {
+                list.Add(alias.Trim().ToLower());
+            }
+            this.aliases = list.AsReadOnly();
+
         }
     }
 }

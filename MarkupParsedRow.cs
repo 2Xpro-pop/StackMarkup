@@ -49,6 +49,8 @@ namespace StackMarkup
                 SyntaxException.CheckIsEmptyName(row);
                 MarkupElementName = row;
             }
+
+            MarkupElementName = MarkupElementName.ToLower().Trim();
         }
 
         public int CountBeforeCharacter { get; private set; } = 0;
