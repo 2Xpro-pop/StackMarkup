@@ -30,13 +30,19 @@ namespace StackMarkup
 
                 if(_elementWithProperties.IsMatch(defination))
                 {
-                    SetNameAndProperty(defination);
-                    Content = row.Replace($"{MarkupElementName}[{PropertiesString}]", "");
+                    SetNameAndProperty(defination, configuration);
+                    Content = row.Replace($"{MarkupElementName}[{PropertiesString}] ", "");
+                }
+                else
+                {
+                    MarkupElementName = defination;
+                    AliasException.CheckNaming(MarkupElementName, configuration);
+                    Content = row.Replace($"{MarkupElementName} ", "");
                 }
             }
             else if (_elementWithProperties.IsMatch(row))
             {
-                SetNameAndProperty(row);
+                SetNameAndProperty(row, configuration);
             }
             else 
             {
@@ -63,13 +69,14 @@ namespace StackMarkup
             }
         }
 
-        private void SetNameAndProperty(string defination)
+        private void SetNameAndProperty(string defination, MarkupConfiguration configuration)
         {
             MarkupElementName = defination.Substring(0, defination.IndexOf('['));
             PropertiesString = defination.Substring(
                 defination.IndexOf('[') + 1,
                 defination.IndexOf(']') - defination.IndexOf('[') -1
             );
+            AliasException.CheckNaming(MarkupElementName, configuration);
         }
 
     }

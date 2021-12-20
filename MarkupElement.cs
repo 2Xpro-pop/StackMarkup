@@ -107,7 +107,7 @@ namespace StackMarkup
                 {
                     _properties.Add(alias, property);
                 }
-                catch(ArgumentException exc)
+                catch(ArgumentException)
                 {
                     throw new AliasException($"Имя {alias} уже занято!");
                 }
