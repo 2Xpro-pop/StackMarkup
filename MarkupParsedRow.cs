@@ -22,9 +22,19 @@ namespace StackMarkup
             
             row = row.Remove(0, CountBeforeCharacter);
 
-            if(row.IndexOf(' ')!= -1)
+            int i = 0;
+            while (row.IndexOf(' ', i) < row.IndexOf(']'))
             {
-                var defination = row.Substring(0, row.IndexOf(' '));
+                i = row.IndexOf(' ', i+1);
+                if (i == -1)
+                {
+                    break;
+                }
+            }
+
+            if (i!= -1)
+            {
+                var defination = row.Substring(0, row.IndexOf(' ', i));
                 
                 SyntaxException.CheckIsEmptyName(defination);
 
