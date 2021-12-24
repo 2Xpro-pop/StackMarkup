@@ -8,7 +8,7 @@ using System.ComponentModel;
 namespace StackMarkup
 {
     [Serializable]
-    public class MarkupElement
+    public class MarkupElementDefination
     {
         [NonSerialized]
         private readonly Type _elementType;
@@ -19,7 +19,7 @@ namespace StackMarkup
         [NonSerialized]
         private readonly PropertyInfo _content = null;
         
-        public MarkupElement(Type elementType, MarkupConfiguration configuration)
+        public MarkupElementDefination(Type elementType, MarkupConfiguration configuration)
         {
             _elementType = elementType;
             _configuration = configuration;

@@ -9,7 +9,7 @@ namespace StackMarkup
     public class MarkupDocument: IEnumerable
     {
         private readonly List<Type> _registered = new List<Type>();
-        private readonly Dictionary<string, MarkupElement> _elements = new Dictionary<string, MarkupElement>();
+        private readonly Dictionary<string, MarkupElementDefination> _elements = new Dictionary<string, MarkupElementDefination>();
 
         public event MarkupElementBuildedHandler OnMarkupElemenBuilded;
 
@@ -27,7 +27,7 @@ namespace StackMarkup
 
         public List<object> Elements { get; } = new List<object>();
         
-        public void Register<T>()
+        public void Register<T>() where T: new() 
         {
             var type = typeof(T);
 
@@ -36,7 +36,7 @@ namespace StackMarkup
                 throw new ArgumentException("Тип уже зарегистрирован!");
             }
 
-            var markupElement = new MarkupElement(type, Configuration);
+            var markupElement = new MarkupElementDefination(type, Configuration);
 
             if (type.GetCustomAttribute<MarkupAliasesAttribute>() != null)
             {
@@ -70,7 +70,9 @@ namespace StackMarkup
                         throw new AliasException($"Имя {row.MarkupElementName} не существует");
                     }
 
-                    OnMarkupElemenBuilded?.Invoke(_elements[row.MarkupElementName].BuildElement(row), row);
+                    var element = _elements[row.MarkupElementName].BuildElement(row);
+                    OnMarkupElemenBuilded?.Invoke(element, row);
+                    Elements.Add(element);
                 }
             }
         }
@@ -88,7 +90,9 @@ namespace StackMarkup
                         throw new AliasException($"Имя {row.MarkupElementName} не существует");
                     }
 
-                    OnMarkupElemenBuilded?.Invoke(_elements[row.MarkupElementName].BuildElement(row), row);
+                    var element = _elements[row.MarkupElementName].BuildElement(row);
+                    OnMarkupElemenBuilded?.Invoke(element, row);
+                    Elements.Add(element);
                 }
             }
         }
