@@ -36,7 +36,7 @@ namespace StackMarkup
                 throw new ArgumentException("Тип уже зарегистрирован!");
             }
 
-            var markupElement = new MarkupElementDefination(type, Configuration);
+            var markupElementDefination = new MarkupElementDefination(type, Configuration);
 
             if (type.GetCustomAttribute<MarkupAliasesAttribute>() != null)
             {
@@ -50,11 +50,11 @@ namespace StackMarkup
                         throw new AliasException($"Имя {alias.Trim().ToLower()} уже занято!");
                     }
 
-                    _elements.Add(alias.Trim().ToLower(), markupElement);
+                    _elements.Add(alias.Trim().ToLower(), markupElementDefination);
                 }
             }
 
-            _elements.Add(type.Name.Trim().ToLower(), markupElement);
+            _elements.Add(type.Name.Trim().ToLower(), markupElementDefination);
         }
 
         public void Load(string path)
