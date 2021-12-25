@@ -28,7 +28,7 @@ namespace StackMarkup
             {
                 if(property.GetCustomAttribute<MarkupIgnoreAttribute>() != null)
                 {
-                    break;
+                    continue;
                 }
                 foreach(var attribute in property.GetCustomAttributes())
                 {
